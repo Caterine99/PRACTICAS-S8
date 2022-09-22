@@ -121,6 +121,8 @@ prop.test(vector_Deporte,vector_Sexo,alternative = "two.sided",conf.level = 0.92
 
 Según la salida de la función prop.test, el p-valor asociado al contraste es 0.0066, que al ser menor que el nivel de significación (0.08), nos lleva a concluir que las proporciones de chicos y chicas que hacen deporte no coinciden.\\
 
+\textbf{Contrastes de hipótesis no paramétricos}\\
+\textbf{Supuesto Práctico 8}\\
 La directora de un hospital quiere comprobar si los ingresos en el hospital se producen en la misma proporción durante todos los días de la semana. Para ello, se anota el número de ingresos durante una semana cualquiera. Los datos se recogen en la siguiente tabla:
 
 \begin{table}[]
@@ -179,7 +181,7 @@ Contrastar la hipótesis de que el dado está bien construido.\\
 \textbf{Solución}\\
 Comencemos introduciendo en R las frecuencias con las que aparecen los valores del dado.
 <<>>=
-frecuencias<-c(116,129,115,120,125,124)
+frecuencias<-c(116,120,115,120,125,124)
 @
 
 Que el dado esté bien construido equivale a decir que todos sus valores aparecen en la misma proporción. Por tanto, el contraste de hipótesis que se debe resolver es el siguiente:\\
@@ -192,5 +194,38 @@ Para resolver este contraste de hipótesis se utiliza la función chisq.test, qu
 <<>>=
 chisq.test(frecuencias)
 @
+
+El valor del estadístico de contraste es 0.68333 y el p-valor asociado es igual a 0.984. Como este p-valor es superior a 0.05 no se puede rechazar la hipótesis nula por lo que, a un nivel de significación del 5\%, concluimos que todos los valores del dado aparecen en la misma proporción. Dicho de otra forma, el dado está bien construido.\\
+
+\textbf{Supuesto Práctico 10}\\
+La siguiente tabla muestra información sobre el número de ejemplares de 7 especies de peces avistados aguas arriba y aguas abajo en un río.\\
+
+Contrastar, a un nivel de significación del 5\%, si la especie de pez y la zona de avistamiento pueden considerarse variables independientes.\\
+
+\textbf{Solución}
+En primer lugar, introduzcamos en R los datos que proporciona el enunciado y construyamos la tabla de contingencia
+<<>>=
+frecuencias<-c(37,19,12,10,10,7,18,20,11,8,16,12,59,24)
+
+tabla_conting<-matrix(frecuencias,7,2,byrow = TRUE,dimnames = list(c("A","B","C","D","E","F","G"),c("Aguas_Arriba","Aguas_Abajo")))
+tabla_conting
+
+chisq.test(tabla_conting, correct = FALSE)
+@
+
+\textbf{Supuesto Práctico 11}\\
+
+Se realiza una investigación para determinar si hay alguna asociación entre el peso de un estudiante y un éxito precoz en la escuela. Se selecciona una muestra de 50 estudiantes y se clasifica a cada uno según dos criterios, el peso y el éxito en la escuela. Los datos se muestran en la tabla adjunta\\
+
+Contrastar, a un nivel de significación del 5\%, si las dos variables estudiadas están relacionadas o si, por el contrario, son independientes.
+
+\textbf{Solución}\\
+Introducimos los datos en R
+<<>>=
+frecuencias<-c(162,263,38,37)
+tabla_conting<-matrix(frecuencias,2,2,byrow = TRUE,dimnames = list(c("Exito=Si","Exito=No"),c("Sobrepeso=Si","Sobrepeso=No")))
+tabla_conting
+@
+
 
 \end{document}
