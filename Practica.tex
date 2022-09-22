@@ -1,0 +1,185 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{xcolor}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\section{CONTRASTES DE HIPÓTESIS}
+\subsection{ Contrastes de hipótesis paramétricos}
+\subsubsection{Supuesto Práctico 1}
+Con el fin de estudiar el número medio de flexiones continuadas que pueden realizar sus alumnos, un profesor de educación física somete a 75 de ellos, elegidos aleatoriamente, a una prueba. El número de flexiones realizado por cada alumno, así como su sexo y si realizan o no deporte fuera del horario escolar se muestran en el fichero Flexiones.txt.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{datos}\hlkwb{<-}\hlkwd{read.table}\hlstd{(}\hlstr{"Flexiones.txt"}\hlstd{,} \hlkwc{header}\hlstd{=}\hlnum{TRUE}\hlstd{)}
+\hlstd{datos}
+\end{alltt}
+\begin{verbatim}
+##    Flexiones Sexo Deporte
+## 1         60    H       0
+## 2         41    H       0
+## 3         53    M       1
+## 4         53    M       0
+## 5         41    H       0
+## 6         56    H       0
+## 7         50    H       0
+## 8         53    M       1
+## 9         50    M       1
+## 10        48    M       0
+## 11        50    M       1
+## 12        48    M       1
+## 13        56    H       0
+## 14        52    M       1
+## 15        54    M       0
+## 16        50    H       1
+## 17        50    H       0
+## 18        54    H       0
+## 19        52    H       1
+## 20        48    H       0
+## 21        48    H       1
+## 22        35    M       1
+## 23        50    M       1
+## 24        41    M       1
+## 25        56    M       1
+## 26        52    M       1
+## 27        56    M       0
+## 28        54    H       1
+## 29        53    H       0
+## 30        53    M       0
+## 31        53    H       0
+## 32        41    M       1
+## 33        48    M       0
+## 34        50    H       1
+## 35        50    M       1
+## 36        52    H       0
+## 37        53    M       0
+## 38        35    H       0
+## 39        35    H       0
+## 40        54    M       0
+## 41        46    M       1
+## 42        48    H       0
+## 43        50    M       0
+## 44        48    H       0
+## 45        41    M       0
+## 46        48    M       1
+## 47        60    H       1
+## 48        53    M       0
+## 49        54    M       1
+## 50        56    H       1
+## 51        50    H       1
+## 52        41    H       0
+## 53        60    M       1
+## 54        60    M       1
+## 55        54    H       0
+## 56        54    H       0
+## 57        53    H       0
+## 58        35    M       0
+## 59        54    H       0
+## 60        48    M       0
+## 61        50    H       0
+## 62        54    H       0
+## 63        54    H       0
+## 64        53    H       0
+## 65        52    H       0
+## 66        50    H       0
+## 67        52    H       0
+## 68        48    H       1
+## 69        46    H       1
+## 70        53    H       0
+## 71        50    H       0
+## 72        35    H       0
+## 73        50    H       1
+## 74        60    M       1
+## 75        50    H       0
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+Una vez hecho esto, introducimos en R el nivel de significación que proporciona el enunciado.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{alpha}\hlkwb{<-}\hlnum{0.05}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+A continuación, calculamos el valor del estadístico de contraste.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{media}\hlkwb{<-}\hlkwd{mean}\hlstd{(datos}\hlopt{$}\hlstd{Flexiones)}
+\hlstd{mu_0}\hlkwb{<-}\hlnum{55}
+\hlstd{varianza}\hlkwb{<-}\hlnum{7.5}
+\hlstd{n}\hlkwb{<-}\hlkwd{nrow}\hlstd{(datos)}
+\hlstd{Z}\hlkwb{<-}\hlstd{(media}\hlopt{-}\hlstd{mu_0)}\hlopt{/}\hlstd{(}\hlkwd{sqrt}\hlstd{(varianza)}\hlopt{/}\hlkwd{sqrt}\hlstd{(n))}
+\hlstd{Z}
+\end{alltt}
+\begin{verbatim}
+## [1] -15.47408
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+Y también el valor crítico, que en este caso coincide con $Z_{1-\alpha/2}$, el cuantil $1-\alpha/2$ de una distribución normal de media 0 y varianza 1.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{cuantil}\hlkwb{<-}\hlkwd{qnorm}\hlstd{(}\hlnum{1}\hlopt{-}\hlstd{alpha}\hlopt{/}\hlnum{2}\hlstd{)}
+\hlstd{cuantil}
+\end{alltt}
+\begin{verbatim}
+## [1] 1.959964
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\end{document}
