@@ -1,0 +1,196 @@
+\documentclass{article}
+
+\begin{document}
+
+\section{CONTRASTES DE HIPÓTESIS}
+\textbf{Contrastes de hipótesis paramétricos}\\
+\textbf{Supuesto Práctico 1}\\
+Con el fin de estudiar el número medio de flexiones continuadas que pueden realizar sus alumnos, un profesor de educación física somete a 75 de ellos, elegidos aleatoriamente, a una prueba. El número de flexiones realizado por cada alumno, así como su sexo y si realizan o no deporte fuera del horario escolar se muestran en el fichero Flexiones.txt.
+<<>>=
+datos<-read.table("Flexiones.txt", header=TRUE)
+datos
+@
+
+Una vez hecho esto, introducimos en R el nivel de significación que proporciona el enunciado.
+<<>>=
+alpha<-0.05
+@
+
+A continuación, calculamos el valor del estadístico de contraste.
+<<>>=
+media<-mean(datos$Flexiones)
+mu_0<-55
+varianza<-7.5
+n<-nrow(datos)
+Z<-(media-mu_0)/(sqrt(varianza)/sqrt(n))
+Z
+@
+
+Y también el valor crítico, que en este caso coincide con $Z_{1-\alpha/2}$, el cuantil $1-\alpha/2$ de una distribución normal de media 0 y varianza 1.
+<<>>=
+cuantil<-qnorm(1-alpha/2)
+cuantil
+@
+
+\textbf{Contrastes de hipótesis para la media de una población normal con Varianza desconocida}\\
+
+
+\textbf{Supuesto Práctico 2}\\
+
+Considerando nuevamente el conjunto de datos que se ha presentado en el Supuesto práctico1, relativo al número de flexiones y el sexo de los alumnos. Contrastar a un nivel de significación del 2\% la hipótesis de que el número medio de flexiones realizada por los alumnos es de 50. Suponer en este caso que el número de flexiones se distribuye según una normal de varianza desconocida. El fichero es Flexiones.txt.\\
+
+
+<<>>=
+t.test(datos$Flexiones,alternative="two.sided",mu=50, conf.level=0.98)
+
+@
+
+\textbf{Supuesto Práctico 3}\\
+
+Considerando nuevamente el conjunto de datos que se ha presentado en el Supuesto práctico1, relativo al número de flexiones y el sexo de los alumnos. Contrastar a un nivel de confianza del 95\%, si la proporción de alumnos varones es mayor o igual que 0.5 frente a que dicha proporción es menor. El fichero es Flexiones.txt.\\
+
+
+<<>>=
+table(datos$Sexo)
+@
+
+De los 75 estudiantes que conforman la muestra, 43 son chicos. Por lo que la llamada a prop.test sería la siguiente:
+<<>>=
+prop.test(43,75,p=0.5,alternative = "less",conf.level = 0.95)
+@
+
+El valor del estadístico de contraste es 1.3333, con un p-valor de 0.8759. Como el p-valor es mayor que el nivel de significación, que es 0.05, no rechazamos la hipótesis de que la proporción de alumnos es mayor o igual que 0.5.\\
+
+\textbf{Supuesto Práctico 4}\\
+
+Continuando con los datos relativos a las flexiones realizadas por un grupo de estudiantes y asumiendo que las flexiones que realizan los chicos y las que realizan las chicas se distribuyen según sendas distribuciones normales con medias y varianzas desconocidas, contrastar a un nivel de significación del 5\% si las varianzas poblacionales de ambas distribuciones pueden asumirse iguales.\\
+
+
+Lo primero que tenemos que hacer para aplicar la función var.test es separar en dos variables los datos relativos a las flexiones realizadas por los chicos y por las chicas.
+<<>>=
+Flexiones.chicos<-datos$Flexiones[datos$sexo=="H"]
+Flexiones.chicas<-datos$Flexiones[datos$sexo=="M"]
+@
+
+A continuación, utilizamos la función var.test
+<<>>=
+var.test(Flexiones.chicos,Flexiones.chicas,alternative="two.sided",conf.level=0.95)
+@
+
+\textbf{Supuesto Práctico 5}\\
+
+En vista de los resultados obtenidos en el Supuesto Práctico 4, y suponiendo que el número de flexiones que realizan los alumnos y las alumnas se distribuyen de acuerdo a variables normales de medias y varianzas desconocidas, ¿puede suponerse, a un nivel de significación del 5\%, que el número medio de flexiones que realizan los chicos y las chicas es igual?
+<<>>=
+datos<-read.table("Flexiones.txt", header=TRUE)
+Flexiones.chicos<-datos$Flexiones[datos$sexo=="H"]
+Flexiones.chicas<-datos$Flexiones[datos$sexo=="M"]
+
+t.test(Flexiones.chicos,Flexiones.chicas,alternative="two.sided",mu =0, var.equal=TRUE)
+@
+
+\textbf{Supuesto Práctico 6}\\
+
+Para estudiar los efectos de un programa de control de peso, el profesor de educación física selecciona aleatoriamente a 6 alumnos y se les toma nota de sus pesos antes y después de pasar por el programa.
+
+<<>>=
+Antes<-c(72,73.5,70,71.5,76,80.5)
+Despues<-c(73,74.5,74,74.5,75,80)
+@
+
+¿Puede suponerse, a un nivel de significación del 5\%, que el programa para el control de peso es efectivo? O, dicho de otra forma, ¿el peso medio de los alumnos antes de someterse al programa es igual al peso medio tras el programa?
+<<>>=
+t.test(Antes,Despues,alternative="two.sided",mu=0,paired=TRUE)
+@
+
+\textbf{Supuesto Práctico 7}\\
+
+Retomando el conjunto de datos relativo a las flexiones que realizan un grupo de estudiantes, contrastar, a un nivel de significación del 8\% si la proporción de alumnos y de alumnas que practican deporte pueden considerarse iguales.\\
+
+En primer lugar, utilicemos el comando table para determinar cuántos chicos y cuantas chicas practican deporte.
+<<>>=
+table(datos$Sexo,datos$Deporte)
+@
+
+En total, 11 de los 43 y 19 de las 32 chicas muestreados practican deporte fuera del horario escolar. Vamos a crear dos vectores con esta información: en uno indicaremos el total de chicos y chicas que practican deporte y en el otro el total de chicos y chicas en la muestra.
+<<>>=
+vector_Deporte<-c(11,19)
+vector_Sexo<-c(43,32)
+
+prop.test(vector_Deporte,vector_Sexo,alternative = "two.sided",conf.level = 0.92)
+@
+
+Según la salida de la función prop.test, el p-valor asociado al contraste es 0.0066, que al ser menor que el nivel de significación (0.08), nos lleva a concluir que las proporciones de chicos y chicas que hacen deporte no coinciden.\\
+
+La directora de un hospital quiere comprobar si los ingresos en el hospital se producen en la misma proporción durante todos los días de la semana. Para ello, se anota el número de ingresos durante una semana cualquiera. Los datos se recogen en la siguiente tabla:
+
+\begin{table}[]
+\begin{tabular}{cc}
+Día de   la semana & Número   de ingresos \\
+Lunes              & 78                   \\
+Martes             & 90                   \\
+Miércoles          & 94                   \\
+Jueves             & 89                   \\
+Viernes            & 110                  \\
+Sábado             & 84                   \\
+Domingo            & 44                  
+\end{tabular}
+\end{table}
+
+Contrastar, a un nivel de significación del 5\%, si la hipótesis de la directora del hospital puede suponerse cierta. ¿Puede asumirse que las proporciones de ingresos de lunes a domingo son (0.15, 0.15, 0.15, 0.15, 0.20, 0.15, 0.05)?\\
+
+\textbf{Solución}
+<<>>=
+frecuencias<-c(78,90,94,89,110,84,44)
+
+chisq.test(frecuencias)
+@
+
+El estadístico de contraste, que sigue una distribución chi-cuadrado, toma el valor 29.389. Los grados de libertad de la distribución chi-cuadrado para este ejemplo son 6. El p-valor asociado al contraste es menor que 0.05 por lo que, considerando un nivel de significación del 5\%, se rechaza la hipótesis nula. Es decir, se concluye que los ingresos hospitalarios no se producen en la misma proporción todos los días de la semana.\\
+
+Para comprobar si el vector (0.15, 0.15, 0.15, 0.15, 0.20, 0.15, 0.05) puede considerarse como el vector de proporciones de ingresos hospitalarios durante los 7 días de la semana, creamos un vector en R que recoja estos valores:
+<<>>=
+proporciones<-c(0.15, 0.15, 0.15, 0.15, 0.20, 0.15, 0.05)
+@
+
+Volvemos a llamar a la función chisq.test incluyendo como argumento el vector que acabamos de definir.
+<<>>=
+chisq.test(frecuencias,p=proporciones)
+@
+
+En este caso, el valor del estadístico de contraste es 9.5286. El p-valor asociado es 0.146 que, al ser superior a 0.05, nos indica que no se puede rechazar la hipótesis nula. Esto equivale a decir que, a un nivel de significación del 5\%, puede suponerse que los ingresos hospitalarios se producen según los valores que se recogen en el vector proporciones.\\
+
+\textbf{Supuesto Práctico 9}\\
+Lanzamos un dado 720 veces y obtenemos los resultados que se muestran en la tabla.\\
+
+\begin{table}[]
+\begin{tabular}{cc}
+Cara dado & Frecuencia \\
+1         & 116        \\
+2         & 120        \\
+3         & 115        \\
+4         & 120        \\
+5         & 125        \\
+6         & 124       
+\end{tabular}
+\end{table}
+
+Contrastar la hipótesis de que el dado está bien construido.\\
+
+\textbf{Solución}\\
+Comencemos introduciendo en R las frecuencias con las que aparecen los valores del dado.
+<<>>=
+frecuencias<-c(116,129,115,120,125,124)
+@
+
+Que el dado esté bien construido equivale a decir que todos sus valores aparecen en la misma proporción. Por tanto, el contraste de hipótesis que se debe resolver es el siguiente:\\
+
+$H_{0}\equiv$ Los valores del dado aparecen en la misma proporción\\
+
+$H_{1}\equiv$ Los valores del dado no aparecen en la misma proporción\\
+
+Para resolver este contraste de hipótesis se utiliza la función chisq.test, que recibe como argumento el vector de frecuencias.
+<<>>=
+chisq.test(frecuencias)
+@
+
+\end{document}
