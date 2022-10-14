@@ -227,5 +227,117 @@ tabla_conting<-matrix(frecuencias,2,2,byrow = TRUE,dimnames = list(c("Exito=Si",
 tabla_conting
 @
 
+Vamos a resolver el contraste usando la función chisq.test (sin aplicar la corrección por continuidad).
+<<>>=
+chisq.test(tabla_conting,correct = FALSE)
+@
+
+El p-valor asociado a este contraste es 0.04083. Como este p-valor es menor que 0.05, se rechaza la hipótesis nula del contraste, por lo que concluimos que el éxito escolar y el sobrepeso son variables dependientes. Esto es, los valores de una dependen de los valores de la otra.\\
+
+\textbf{Otros contrastes no paramétricos}\\
+
+\textbf{Supuesto Práctico 12}\\
+Se quiere comprobar si la proporción de hombres y mujeres en un municipio andaluz es la misma o no. Para ello, se selecciona una muestra aleatoria de habitantes del municipio, de los cuales\%, ¿puede asumirse cierta la igualdad en el número de hombres y mujeres?
+
+\textbf{Solución}\\
+Comencemos planteando las hipótesis del contraste. En este caso, se quiere probar la igualdad de hombres y de mujeres en el municipio. Para ello, es posible plantear el contraste de hipótesis de dos formas distintas. Por un lado, se puede contrastar si la proporción de hombres es de 0.5 (en cuyo caso la proporción de mujeres será también 0.5 y habrá equidad entre ambos géneros) frente a que esta proporción es distinta de 0.5. Pero, alternativamente, se puede contrastar si la proporción de mujeres es de 0.5 (lo que implica que la proporción de hombre será, igualmente, de 0.5 y habrá equidad entre géneros) frente a que esta proporción es distinta de 0.5.\\
+
+Utilicemos la función binom.test para resolver el contraste.\\
+<<>>=
+binom.test(258,n=474,p=0.05,alternative = "two.sided",conf.level = 0.95)
+@
+
+En la salida aparecen los datos de entrada que se han usado para resolver el contraste (258 hombres de 474 habitantes muestreados) así como el tipo de la hipótesis alternativa (distinto de) y la proporción que se ha usado como referente para el contraste (0.5).\\
+
+También aparece un p-valor, que es el que nos ayuda a resolver el contraste. En este caso, el p-valor es 0.05956. Como es mayor que 0.05, no podemos rechazar la hipótesis nula, por lo que podemos asumir que la proporción de hombres en la población es de 0.5. Consecuentemente, la proporción de mujeres también puede considerarse igual a 0.5 y puede concluirse que el número de hombres y mujeres en el municipio es el mismo.\\
+
+Por último, en la salida se incluye un intervalo de confianza al nivel de confianza indicado en la llamada a binom.test (95\% en nuestro caso), para la proporción de hombres en el municipio. Este intervalo es (0.4982, 0.5897). Como era de esperar, la proporción de referencia pertenece al intervalo calculado.\\
+
+Si se hubiese optado por considerar p como la proporción de mujeres en el municipio y resolver el contraste a partir de esta proporción se llegaría a la misma conclusión, tal y como se muestra a continuación.
+<<>>=
+binom.test(216,n=474,p=0.05,alternative = "two.sided",conf.level = 0.95)
+@
+
+\textbf{Supuesto Práctico 13}\\
+Entre los pacientes con cáncer de pulmón, el 90\% o más muere generalmente en el espacio de tres años. Como resultado de nuevas formas de tratamiento, se cree que esta tasa se ha reducido. En un reciente estudio sobre 150 paciente diagnosticados de cáncer de pulmón, 128 murieron en el espacio de tres años. ¿Se puede afirmar que realmente ha disminuido la tasa de mortalidad?\\
+
+\textbf{Solución}\\
+En primer lugar, vamos a plantear las hipótesis del contraste.\\
+
+$H_{0}\equiv p \geq 0.9 el tramiento no es efectivo$ 
+
+$H_{1}\equiv  p < 0.9 el tramiento es efectivo$
+
+A continuación, utilizaremos la función binom.test para resolver el contraste. Teniendo en cuenta el número de pacientes de la muestra que fallecieron (128), el número de pacientes totales en la muestra (150), la proporción que se quiere contrastar (0.9) y la forma de la hipótesis alternativa (“menor que”).
+<<>>=
+binom.test(128,150,p=0.9,alternative = "less",conf.level = 0.95)
+@
+
+El p-valor asociado al contraste es 0.04396. De manera que, considerando un nivel de significación del 5\%, rechazamos la hipótesis nula, por lo que se puede concluir que la proporción de pacientes que fallecieron en el espacio de tres años es inferior a 0.9 y, consecuentemente, que el tratamiento es efectivo.\\
+
+\textbf{Contraste de aleatoriedad. Test de Rachas}\\
+
+\textbf{Supuesto Práctico 14}
+Se realiza un estudio sobre el tiempo en horas de un tipo determinado de escáner antes de la primera avería. Se ha observado una muestra de 10 escáner y se ha anotado el tiempo de funcionamiento en horas: 18.21; 2.36;  17.3; 16.6; 4.70; 3.63; 15.56; 7.35; 9.78; 14.69. A un nivel de significación del 5\%, ¿se puede considerar aleatoriedad en la muestra?\\
+
+\textbf{Solución}\\
+Formulamos el contraste que debemos resolver.\\
+
+$H_{0}\equiv Los datos de la muestra son aleatorios$ 
+
+$H_{1}\equiv  Los datos de la muestra no son aleatorios$
+
+Comenzamos introduciendo los datos en R:
+<<>>=
+datos<-c(18.21,2.36,17.3,16.6,4.70,3.63,15.56,7.35,9.78,14.69)
+@
+
+Para resolver el contraste, cargamos el paquete randtests y, a continuación, llamamos a la función runs.test. Cuando llamamos a esta función, debemos tener en cuenta que la hipótesis alternativa es del tipo “distinto de”. Por otra parte, como el enunciado no especifica ningún punto de corte para transformar los valores del vector numérico en valores dicotómicos, este punto de corte vendrá dado por la mediana de los datos (función median en R).\\
+<<>>=
+library(randtests)
+runs.test(datos,alternative = "two.sided",threshold = median(datos),plot = TRUE)
+@
+
+Según los resultados del test de rachas, se han encontrado 7 rachas (runs), que vienen separadas por líneas discontinuas verticales. Hay 5 valores por encima de la mediana $(n_{1})$, marcados en negro, y otros 5 valores por debajo de la mediana $(n_{2})$, marcados en rojo.\\
+
+El p-valor asociado al contraste es 0.5023 superior a 0.05, por lo que no es posible rechazar la hipótesis nula. Por tanto, podemos concluir que los datos de la muestra son aleatorios.\\
+
+\textbf{Contraste sobre bondad de ajuste: Procedimiento Prueba de Kolmogorov-Smirnov}\\
+
+\textbf{Supuesto Práctico 15}\\
+Las puntuaciones de 10 individuos en una prueba de una oposición han sido las siguientes: 41.81, 40.30, 40.20, 37.14, 39.29, 38.79, 40.73, 39.26, 35.74, 41.65. ¿Puede suponerse, a un nivel de significación del 5\% que dichas puntuaciones se ajustan a una distribución normal de media 40 y desviación típica 3?\\
+
+\textbf{Solución}
+El contraste de hipótesis que se plantea es el siguiente:
+
+$H_{0}\equiv Los datos de la muestra proceden de una distribución N(40,3)$
+
+$H_{0}\equiv Los datos de la muestra no proceden de de una distribución N(40,3)$
+
+Comenzamos introduciendo los datos en R:
+<<>>=
+datos<-c(41.81,40.30,40.20,37.14,39.29,38.79,40.73,39.26,35.74,41.65)
+@
+
+A continuación, se resuelve el contraste mediante una llamada a la función ks.test. Debemos tener en cuenta que la distribución de comparación es la distribución normal (por tanto, el argumento y tomará el valor pnorm) de media igual a 40 y desviación típica igual a 3.
+<<>>=
+ks.test(datos,y=pnorm,40,3,alternative = "two.sided")
+@
+
+En este caso, el valor del estadístico de contraste es 0.27314 y el p-valor asociado al contraste es 0.3752. Como el p-valor es superior a 0.05 no podemos rechazar la hipótesis nula, por lo que concluimos que los datos de la muestra proceden de una distribución normal de media 40 y de desviación típica 3.
+
+\textbf{Pruebas para dos muestras independientes}\\
+
+\textbf{Supuesto Práctico 16}\\
+
+En unos grandes almacenes se realiza un estudio sobre el rendimiento de ventas de los vendedores. Para ello, se observa durante 10 días el número de ventas de dos vendedores:\\
+
+Vendedor A: 10, 40, 60, 15, 70, 90, 30, 32, 22, 13\\
+Vendedor B: 45, 60, 35, 30, 30, 15, 50, 20, 32, 9\\
+
+Contrastar, considerando un nivel de significación del 5\%, si los rendimientos medianos de ambos vendedores pueden asumirse iguales.\\
+
+\textbf{Solución}
+Comenzamos introduciendo los datos de ventas de los dos vendedores:
 
 \end{document}
